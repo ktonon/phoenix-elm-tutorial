@@ -1,8 +1,10 @@
 module SeatSaver exposing (main)
 
-import Html exposing (li, text, ul)
+import Html exposing (..)
 import Html.Attributes exposing (class)
 
+
+main : Html a
 main =
     view init
 
@@ -19,6 +21,7 @@ type alias Model =
     List Seat
 
 
+init : Model
 init =
     [ { seatNo = 1, occupied = False}
     , { seatNo = 2, occupied = False}
@@ -38,8 +41,11 @@ init =
 -- VIEW
 
 
+view : Model -> Html a
 view model =
     ul [ class "seats" ] (List.map seatItem model)
 
+
+seatItem : Seat -> Html a
 seatItem seat =
     li [ class "seat available" ] [ Html.text (toString seat.seatNo) ]

@@ -37,3 +37,7 @@ Elm.SeatSaver.embed(elmDiv)
 ```
 
 and not (`Elm.embed(Elm.SeatSaver, elmDiv)`). See [Why am I getting "TypeError: Elm.embed is not a function?"](http://faq.elm-community.org/17.html#why-am-i-getting-typeerror-elmembed-is-not-a-function)
+
+## Part 5 Differences
+
+`Html.Html` is now a function that takes one argument. So whenever you see `Html` in a type annotation, replace it with `Html a`. For a better explanation of what this means see [Getting Started with Elm v0.17](https://medium.com/@diamondgfx/getting-started-with-elm-11d7a53b1a78#.pelvp3vbd)
