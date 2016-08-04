@@ -41,3 +41,28 @@ and not (`Elm.embed(Elm.SeatSaver, elmDiv)`). See [Why am I getting "TypeError: 
 ## Part 5 Differences
 
 `Html.Html` is now a function that takes one argument. So whenever you see `Html` in a type annotation, replace it with `Html a`. For a better explanation of what this means see [Getting Started with Elm v0.17](https://medium.com/@diamondgfx/getting-started-with-elm-11d7a53b1a78#.pelvp3vbd)
+
+## Part 6 Differences
+
+`StartApp` has been renamed to `Html.App`. It can be used like this:
+
+```elm
+import Html.App as Html
+
+main =
+  Html.beginnerProgram
+    { model = init
+    , update = update
+    , view = view
+    }
+```
+
+See the [Html.App docs](http://package.elm-lang.org/packages/elm-lang/html/1.1.0/Html-App) and also [StartApp is now Html.App](https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md#startapp-is-now-htmlapp)
+
+There is [no more Signal.Address](https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md#no-more-signaladdress). For example, `seatItem` should be declared as:
+
+```elm
+seatItem : Seat -> Html Action
+```
+
+and not `seatItem : Signal.Address Action -> Seat -> Html`
