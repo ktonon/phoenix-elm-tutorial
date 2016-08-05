@@ -47,11 +47,11 @@ init =
 -- UPDATE
 
 
-type Action = Toggle Seat
+type Msg = Toggle Seat
 
-update : Action -> Model -> Model
-update action model =
-  case action of
+update : Msg -> Model -> Model
+update msg model =
+  case msg of
     Toggle seatToToggle ->
       let
         updateSeat seatFromModel =
@@ -65,12 +65,12 @@ update action model =
 -- VIEW
 
 
-view : Model -> Html Action
+view : Model -> Html Msg
 view model =
   ul [ class "seats" ] (List.map seatItem model)
 
 
-seatItem : Seat -> Html Action
+seatItem : Seat -> Html Msg
 seatItem seat =
   let
     occupiedClass =
