@@ -66,3 +66,7 @@ seatItem : Seat -> Html Action
 ```
 
 and not `seatItem : Signal.Address Action -> Seat -> Html`
+
+## Part 8 Differences
+
+[Effects is now Cmd](https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md#effects-is-now-cmd)
