@@ -4,6 +4,9 @@ import Html exposing (..)
 import Html.App as Html
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import Http
+import Json.Decode as Json exposing ((:=))
+import Task
 
 
 main : Program Never
@@ -12,7 +15,7 @@ main =
     { init = init
     , update = update
     , view = view
-    , subscriptions = \_ -> Sub.none
+    , subscriptions = (\_ -> Sub.none)
     }
 
 
@@ -30,29 +33,17 @@ type alias Model =
 
 init : (Model, Cmd Msg)
 init =
-  let
-    seats =
-      [ { seatNo = 1, occupied = False}
-      , { seatNo = 2, occupied = False}
-      , { seatNo = 3, occupied = False}
-      , { seatNo = 4, occupied = False}
-      , { seatNo = 5, occupied = False}
-      , { seatNo = 6, occupied = False}
-      , { seatNo = 7, occupied = False}
-      , { seatNo = 8, occupied = False}
-      , { seatNo = 9, occupied = False}
-      , { seatNo = 10, occupied = False}
-      , { seatNo = 11, occupied = False}
-      , { seatNo = 12, occupied = False}
-      ]
-  in
-    (seats, Cmd.none)
+  ([], fetchSeats)
 
 
 -- UPDATE
 
 
-type Msg = Toggle Seat
+type Msg 
+  = Toggle Seat
+  | SetSeats (Maybe Model) 
+  | GetSeatsFailed Http.Error
+
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -65,6 +56,34 @@ update msg model =
           else seatFromModel
       in
         (List.map updateSeat model, Cmd.none)
+    SetSeats seats ->
+      let
+        newModel = Maybe.withDefault model seats
+      in
+        (newModel, Cmd.none)
+    GetSeatsFailed _ ->
+      (model, Cmd.none)
+
+
+-- EFFECTS
+
+
+fetchSeats: Cmd Msg
+fetchSeats =
+  Http.get decodeSeats "http://localhost:4000/api/seats"
+    |> Task.toMaybe
+    |> Task.perform GetSeatsFailed SetSeats
+
+
+decodeSeats: Json.Decoder Model
+decodeSeats =
+  let
+    seat =
+      Json.object2 (\seatNo occupied -> (Seat seatNo occupied))
+        ("seatNo" := Json.int)
+        ("occupied" := Json.bool)
+  in
+    Json.at ["data"] (Json.list seat)
 
 
 -- VIEW
