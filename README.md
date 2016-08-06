@@ -70,3 +70,32 @@ and not `seatItem : Signal.Address Action -> Seat -> Html`
 ## Part 8 Differences
 
 [Effects is now Cmd](https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md#effects-is-now-cmd)
+
+## Part 9 Differences
+
+There is no more `Effects.task`, so `fetchSeats` can now be written like this:
+
+```elm
+Http.get decodeSeats "http://localhost:4000/api/seats"
+  |> Task.toMaybe
+  |> Task.perform GetSeatsFailed SetSeats
+```
+
+and in addition to the `SetSeats` message, you also need to define `GetSeatsFailed`:
+
+```elm
+type Msg 
+  = Toggle Seat
+  | SetSeats (Maybe Model) 
+  | GetSeatsFailed Http.Error
+```
+
+and handle it in the update:
+
+```elm
+update msg model =
+  case msg of
+    -- ...
+    GetSeatsFailed _ ->
+      (model, Cmd.none)
+```
